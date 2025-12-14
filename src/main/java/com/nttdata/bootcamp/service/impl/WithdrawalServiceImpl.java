@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import java.util.Date;
+
 //Service implementation
 @Service
 public class WithdrawalServiceImpl implements WithdrawalService {
@@ -56,18 +58,20 @@ public class WithdrawalServiceImpl implements WithdrawalService {
     }
 
     @Override
-    public Mono<Withdrawal> updateWithdrawal(Withdrawal dataWithdrawal) {
-        return findByNumber(dataWithdrawal.getWithdrawalNumber())
-                .switchIfEmpty(Mono.error(new Error(
-                        "Withdrawal " + dataWithdrawal.getWithdrawalNumber() + " does not exist"
-                )))
+    public Mono<Withdrawal> updateWithdrawalStatus(String withdrawalNumber, String nuevoEstado) {
+        return findByNumber(withdrawalNumber)
+                .switchIfEmpty(Mono.error(
+                        new IllegalStateException("Withdrawal " + withdrawalNumber + " does not exist")
+                ))
                 .flatMap(existing -> {
-                    dataWithdrawal.setDni(existing.getDni());
-                    dataWithdrawal.setAmount(existing.getAmount());
-                    dataWithdrawal.setCreationDate(existing.getCreationDate());
-                    return withdrawalRepository.save(dataWithdrawal);
+                    validarCambioEstado(existing.getStatus(), nuevoEstado);
+                    existing.setStatus(nuevoEstado);
+                    existing.setModificationDate(new Date());
+                    return withdrawalRepository.save(existing);
                 });
     }
+
+
 
     @Override
     public Mono<Void> deleteWithdrawal(String number) { // VERFICAR
@@ -84,4 +88,14 @@ public class WithdrawalServiceImpl implements WithdrawalService {
                 .filter(x -> x.getCommission() > 0 &&
                         x.getAccountNumber().equals(accountNumber));
     }
+
+    //********************
+    private void validarCambioEstado(String estadoActual, String nuevoEstado) {
+        if ("COMPLETED".equals(estadoActual)) {
+            throw new IllegalStateException(
+                    "No se puede modificar un retiro que ya está COMPLETED"
+            );
+        }
+    }
+
 }

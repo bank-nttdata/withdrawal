@@ -1,6 +1,7 @@
 package com.nttdata.bootcamp.controller;
 
 import com.nttdata.bootcamp.entity.Withdrawal;
+import com.nttdata.bootcamp.entity.dto.UpdateWithdrawalStatusRequest;
 import com.nttdata.bootcamp.entity.dto.WithdrawalDto;
 import com.nttdata.bootcamp.service.WithdrawalService;
 import com.nttdata.bootcamp.util.Constant;
@@ -59,7 +60,7 @@ public class WithdrawalController {
     }
 
     // ===============================
-    // SAVE (TOTALMENTE REACTIVO)
+    // SAVE
     // ===============================
     @CircuitBreaker(name = "withdrawal", fallbackMethod = "fallBackGetWithdrawal")
     @PostMapping("/saveWithdrawal")
@@ -92,18 +93,14 @@ public class WithdrawalController {
     // UPDATE
     // ===============================
     @CircuitBreaker(name = "withdrawal", fallbackMethod = "fallBackGetWithdrawal")
-    @PutMapping("/updateWithdrawal/{number}")
-    public Mono<Withdrawal> updateWithdrawal(
+    @PutMapping("/withdrawals/{number}/status")
+    public Mono<Withdrawal> updateWithdrawalStatus(
             @PathVariable String number,
-            @RequestBody Withdrawal data) {
+            @RequestBody UpdateWithdrawalStatusRequest request) {
 
-        data.setWithdrawalNumber(number);
-        data.setModificationDate(new Date());
-
-        return withdrawalService.updateWithdrawal(data)
-                .doOnSuccess(w -> LOGGER.info("Withdrawal actualizado {}", w))
-                .doOnError(e -> LOGGER.error("Error actualizando withdrawal: {}", e.getMessage()));
+        return withdrawalService.updateWithdrawalStatus(number, request.getStatus());
     }
+
 
     // ===============================
     // DELETE

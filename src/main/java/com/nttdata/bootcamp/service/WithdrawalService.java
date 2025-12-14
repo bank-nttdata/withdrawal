@@ -12,9 +12,9 @@ public interface WithdrawalService {
 
     public Mono<Withdrawal> findByNumber(String number);
     public Mono<Withdrawal> saveWithdrawal(Withdrawal withdrawal);
-    public Mono<Withdrawal> updateWithdrawal(Withdrawal withdrawal);
+    //public Mono<Withdrawal> updateWithdrawal(Withdrawal withdrawal);
     public Mono<Void> deleteWithdrawal(String accountNumber);
 
     public Flux<Withdrawal> findByCommission(String accountNumber);
-
+    public Mono<Withdrawal> updateWithdrawalStatus(String withdrawalNumber, String status);
 }
