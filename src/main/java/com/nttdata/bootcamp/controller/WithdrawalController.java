@@ -45,7 +45,8 @@ public class WithdrawalController {
             @PathVariable String accountNumber) {
 
         return withdrawalService.findByAccountNumber(accountNumber)
-                .doOnSubscribe(s -> LOGGER.info("Buscando withdrawals por cuenta {}", accountNumber))
+                .doOnSubscribe(s ->
+                        LOGGER.info("Buscando withdrawals por cuenta {}", accountNumber))
                 .doOnNext(w -> LOGGER.info("Withdrawal: {}", w));
     }
 
@@ -56,7 +57,8 @@ public class WithdrawalController {
     @GetMapping("/findByWithdrawalNumber/{number}")
     public Mono<Withdrawal> findByWithdrawalNumber(@PathVariable String number) {
         return withdrawalService.findByNumber(number)
-                .doOnSubscribe(s -> LOGGER.info("Buscando withdrawal por número {}", number));
+                .doOnSubscribe(s ->
+                        LOGGER.info("Buscando withdrawal por número {}", number));
     }
 
     // ===============================
@@ -85,8 +87,10 @@ public class WithdrawalController {
                     return w;
                 })
                 .flatMap(withdrawalService::saveWithdrawal)
-                .doOnSuccess(w -> LOGGER.info("Withdrawal registrado {}", w))
-                .doOnError(e -> LOGGER.error("Error registrando withdrawal: {}", e.getMessage()));
+                .doOnSuccess(w ->
+                        LOGGER.info("Withdrawal registrado {}", w))
+                .doOnError(e ->
+                        LOGGER.error("Error registrando withdrawal: {}", e.getMessage()));
     }
 
     // ===============================
@@ -109,8 +113,10 @@ public class WithdrawalController {
     @DeleteMapping("/deleteWithdrawal/{number}")
     public Mono<Void> deleteWithdrawal(@PathVariable String number) {
         return withdrawalService.deleteWithdrawal(number)
-                .doOnSuccess(v -> LOGGER.info("Withdrawal eliminado {}", number))
-                .doOnError(e -> LOGGER.error("Error eliminando withdrawal: {}", e.getMessage()));
+                .doOnSuccess(v ->
+                        LOGGER.info("Withdrawal eliminado {}", number))
+                .doOnError(e ->
+                        LOGGER.error("Error eliminando withdrawal: {}", e.getMessage()));
     }
 
     // ===============================
@@ -129,8 +135,10 @@ public class WithdrawalController {
     @GetMapping("/getCommissionsWithdrawal/{accountNumber}")
     public Flux<Withdrawal> getCommissionsWithdrawal(@PathVariable String accountNumber) {
         return withdrawalService.findByCommission(accountNumber)
-                .doOnSubscribe(s -> LOGGER.info("Buscando comisiones de cuenta {}", accountNumber))
-                .doOnNext(w -> LOGGER.info("Withdrawal con comisión {}", w));
+                .doOnSubscribe(s ->
+                        LOGGER.info("Buscando comisiones de cuenta {}", accountNumber))
+                .doOnNext(w ->
+                        LOGGER.info("Withdrawal con comisión {}", w));
     }
 
     // ===============================

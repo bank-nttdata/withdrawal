@@ -21,16 +21,13 @@ public class Withdrawal {
 
     @Id
     private String id;
-
     private String dni;
     private String accountNumber;
     private String typeAccount;
-
     private String withdrawalNumber;
     private Double amount;
     private Double commission;
     private String status;
-
 
     @JsonFormat(pattern = "yyyy-MM-dd")
     @CreatedDate

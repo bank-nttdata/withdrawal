@@ -71,8 +71,6 @@ public class WithdrawalServiceImpl implements WithdrawalService {
                 });
     }
 
-
-
     @Override
     public Mono<Void> deleteWithdrawal(String number) { // VERFICAR
         return findByNumber(number)
